@@ -1,0 +1,17 @@
+# Prevenir execução de PHP na pasta de uploads
+<FilesMatch "\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Permitir apenas imagens
+<FilesMatch "\.(jpg|jpeg|png|webp|gif)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>

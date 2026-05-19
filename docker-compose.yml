@@ -1,0 +1,45 @@
+services:
+  web:
+    image: php:8.3-apache
+    container_name: bazar_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    command: >
+      bash -c "
+        docker-php-ext-install pdo pdo_mysql &&
+        a2enmod rewrite &&
+        sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf &&
+        apache2-foreground
+      "
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: bazar_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bazar_mix_jo
+      MYSQL_USER: bazar_user
+      MYSQL_PASSWORD: bazar_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - bazar_db_data:/var/lib/mysql
+      - ./database/database.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+    restart: unless-stopped
+
+volumes:
+  bazar_db_data:
