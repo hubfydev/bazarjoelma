@@ -1,12 +1,22 @@
-CREATE DATABASE IF NOT EXISTS bazar_mix_jo
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE bazar_mix_jo;
+-- Bazar Mix da Jô — Estrutura do banco de dados
+--
+-- IMPORTANTE (Hostinger / cPanel):
+-- 1. Crie o banco "u921961937_bazar_mix_jo" pelo painel da Hostinger.
+-- 2. Crie o usuário "u921961937_bazar_user" e vincule-o ao banco com todos
+--    os privilégios.
+-- 3. Abra o phpMyAdmin, selecione o banco criado e importe este arquivo
+--    na aba "Importar". NÃO descomente as linhas CREATE DATABASE / USE
+--    abaixo — na Hostinger o banco já existe quando o SQL é importado.
+--
+-- Para uso local (Docker / linha de comando), descomente as duas linhas:
+-- CREATE DATABASE IF NOT EXISTS bazar_mix_jo
+--   CHARACTER SET utf8mb4
+--   COLLATE utf8mb4_unicode_ci;
+-- USE bazar_mix_jo;
 
 SET NAMES utf8mb4;
 
-CREATE TABLE admins (
+CREATE TABLE IF NOT EXISTS admins (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(120) NOT NULL,
   email VARCHAR(160) NOT NULL UNIQUE,
@@ -15,7 +25,7 @@ CREATE TABLE admins (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(120) NOT NULL,
   status TINYINT(1) NOT NULL DEFAULT 1,
@@ -23,7 +33,7 @@ CREATE TABLE categories (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   category_id INT UNSIGNED NULL,
   title VARCHAR(180) NOT NULL,
@@ -54,4 +64,5 @@ INSERT INTO categories (name, status) VALUES
 ('Acessórios', 1),
 ('Casa', 1),
 ('Infantil', 1),
-('Diversos', 1);
+('Diversos', 1),
+('Eletrônicos', 1);

@@ -1,41 +1,68 @@
 /**
  * Bazar Mix da Jô — JavaScript administrativo
- * Validação de upload, preview de imagens e utilitários do painel
+ * Validação de upload, preview de imagens e utilitários do painel.
  */
 
+const MAX_IMAGE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
 document.addEventListener('DOMContentLoaded', () => {
+
+  /* ===== Botões Câmera / Galeria para cada slot de foto ===== */
+  document.querySelectorAll('[data-upload-source]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const slot = button.closest('.image-field');
+      if (!slot) return;
+      const input = slot.querySelector('input[type="file"][data-file-input]');
+      if (!input) return;
+
+      if (button.dataset.uploadSource === 'camera') {
+        input.setAttribute('capture', 'environment');
+      } else {
+        input.removeAttribute('capture');
+      }
+      input.click();
+    });
+  });
 
   /* ===== Validação e preview de imagens no upload ===== */
   document.querySelectorAll('input[type="file"]').forEach((input) => {
     input.addEventListener('change', () => {
       const file = input.files[0];
-      if (!file) return;
+      const slot = input.closest('.image-field');
+      const filenameEl = slot ? slot.querySelector('[data-upload-filename]') : null;
 
-      // Validar tamanho (máximo 2 MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Cada imagem deve ter no máximo 2 MB.');
-        input.value = '';
+      if (!file) {
+        if (filenameEl) filenameEl.textContent = '';
         return;
       }
 
-      // Validar tipo
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-      if (!allowedTypes.includes(file.type)) {
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        alert('Cada imagem deve ter no máximo 20 MB.');
+        input.value = '';
+        if (filenameEl) filenameEl.textContent = '';
+        return;
+      }
+
+      if (!ALLOWED_TYPES.includes(file.type)) {
         alert('Formatos permitidos: JPG, JPEG, PNG e WEBP.');
         input.value = '';
+        if (filenameEl) filenameEl.textContent = '';
         return;
       }
 
-      // Preview da imagem selecionada
-      const container = input.closest('.image-field');
-      if (!container) return;
+      if (filenameEl) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+        filenameEl.textContent = `${file.name} (${sizeMB} MB)`;
+      }
 
-      let preview = container.querySelector('.upload-preview');
+      if (!slot) return;
+      let preview = slot.querySelector('.upload-preview');
       if (!preview) {
         preview = document.createElement('img');
         preview.className = 'upload-preview';
         preview.style.cssText = 'width:96px;height:96px;object-fit:cover;border-radius:8px;border:2px solid #F0D8DC;margin-top:8px;';
-        container.appendChild(preview);
+        slot.appendChild(preview);
       }
 
       const reader = new FileReader();
@@ -60,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
       checkbox.addEventListener('change', () => {
         label.style.opacity = checkbox.checked ? '1' : '0.6';
       });
-      // Estado inicial
       label.style.opacity = checkbox.checked ? '1' : '0.6';
     }
   });

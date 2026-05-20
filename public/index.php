@@ -75,7 +75,6 @@ $totalResults = count($products);
     <header class="site-header">
         <div class="container header-inner">
             <a class="brand" href="/">🛍️ <?= e(STORE_NAME) ?></a>
-            <a class="admin-link" href="/admin/login.php">Admin</a>
         </div>
     </header>
 

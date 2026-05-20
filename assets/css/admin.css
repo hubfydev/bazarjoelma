@@ -426,6 +426,64 @@ legend {
   border-top: 0;
 }
 
+.image-field-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.upload-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition);
+  flex: 1 1 140px;
+  min-height: 48px;
+}
+
+.upload-btn:hover {
+  border-color: var(--red);
+  color: var(--red-dark);
+  background: var(--soft-pink);
+}
+
+.upload-btn.camera {
+  background: var(--green-light);
+  border-color: #B8E6C5;
+  color: var(--green);
+}
+
+.upload-btn.camera:hover {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+
+.upload-filename {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-style: italic;
+  min-height: 1.2em;
+  word-break: break-all;
+}
+
 .current-image {
   display: flex;
   align-items: center;
@@ -439,6 +497,14 @@ legend {
   border-radius: var(--radius-sm);
   object-fit: cover;
   border: 2px solid var(--border);
+}
+
+@media (max-width: 480px) {
+  .upload-btn {
+    flex: 1 1 100%;
+    padding: 14px 18px;
+    font-size: 1rem;
+  }
 }
 
 .form-actions {

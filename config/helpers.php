@@ -5,7 +5,7 @@ session_start();
 
 const STORE_NAME = 'Bazar Mix da Jô';
 const WHATSAPP_NUMBER = '13529890272';
-const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB por foto.
+const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20 MB por foto.
 
 function e(?string $value): string
 {
@@ -63,7 +63,7 @@ function upload_product_image(array $file): ?string
     }
 
     if ($file['size'] > MAX_IMAGE_SIZE) {
-        throw new RuntimeException('Cada imagem deve ter no máximo 2 MB.');
+        throw new RuntimeException('Cada imagem deve ter no máximo 20 MB.');
     }
 
     $tmpPath = $file['tmp_name'];

@@ -38,13 +38,29 @@ $categories = db()->query('SELECT id, name FROM categories WHERE status = 1 ORDE
 
 <fieldset>
     <legend>📸 Fotos do produto</legend>
-    <p class="hint">Envie até 4 fotos nos formatos JPG, PNG ou WEBP. Máximo de 2 MB por foto. A primeira foto será a imagem principal.</p>
+    <p class="hint">Envie até 4 fotos nos formatos JPG, PNG ou WEBP. Máximo de 20 MB por foto. A primeira foto será a imagem principal. No celular, escolha entre <strong>tirar uma foto</strong> agora ou <strong>selecionar da galeria</strong>.</p>
     <?php for ($i = 1; $i <= 4; $i++): ?>
         <?php $image = $product["image_$i"] ?? null; ?>
         <div class="image-field">
-            <label>Foto <?= $i ?><?= $i === 1 ? ' (principal)' : '' ?>
-                <input type="file" name="image_<?= $i ?>" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
-            </label>
+            <span class="image-field-label">Foto <?= $i ?><?= $i === 1 ? ' (principal)' : '' ?></span>
+
+            <input type="file"
+                   name="image_<?= $i ?>"
+                   accept="image/jpeg,image/png,image/webp"
+                   data-file-input
+                   hidden>
+
+            <div class="upload-buttons">
+                <button type="button" class="upload-btn camera" data-upload-source="camera">
+                    📷 Tirar foto
+                </button>
+                <button type="button" class="upload-btn gallery" data-upload-source="gallery">
+                    🖼️ Galeria
+                </button>
+            </div>
+
+            <span class="upload-filename" data-upload-filename></span>
+
             <?php if ($image): ?>
                 <div class="current-image">
                     <img src="/uploads/products/<?= e($image) ?>" alt="Foto atual <?= $i ?>">
