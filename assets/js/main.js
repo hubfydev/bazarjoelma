@@ -111,4 +111,89 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ===== Galeria de detalhes do produto (página de detalhes) ===== */
+  const detailGallery = document.querySelector('[data-detail-gallery]');
+  if (detailGallery) {
+    const images = Array.from(detailGallery.querySelectorAll('[data-detail-gallery-image]'));
+    const thumbnails = Array.from(document.querySelectorAll('[data-detail-thumbnail]'));
+    let currentIndex = 0;
+
+    function showImage(index) {
+      if (images.length === 0) return;
+      
+      currentIndex = (index + images.length) % images.length;
+      
+      // Atualizar foto principal
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === currentIndex);
+      });
+      
+      // Atualizar miniaturas
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    // Event listeners nas miniaturas
+    thumbnails.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => showImage(index));
+      
+      // Navegação com teclado (setas)
+      thumb.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          showImage(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          showImage(currentIndex + 1);
+        }
+      });
+    });
+
+    // Navegação com teclado na galeria principal
+    detailGallery.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showImage(currentIndex - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        showImage(currentIndex + 1);
+      }
+    });
+
+    // Suporte a swipe touch na galeria principal
+    if (images.length > 1) {
+      let startX = 0;
+      let startY = 0;
+      let tracking = false;
+
+      detailGallery.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        tracking = true;
+      }, { passive: true });
+
+      detailGallery.addEventListener('touchmove', (e) => {
+        if (!tracking) return;
+        const dx = e.touches[0].clientX - startX;
+        const dy = e.touches[0].clientY - startY;
+
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      detailGallery.addEventListener('touchend', (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = e.changedTouches[0].clientX - startX;
+
+        if (Math.abs(dx) > 40) {
+          if (dx < 0) showImage(currentIndex + 1);
+          else showImage(currentIndex - 1);
+        }
+      }, { passive: true });
+    }
+  }
+
 });
